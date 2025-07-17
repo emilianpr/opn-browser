@@ -1,3 +1,17 @@
-This is an open source project.
-The project represents a browser fully made with the power of AI, and no human code will be written on this.
-The goal is to test the power of prompts and achieve full stability only by asking AI's to do so.
+# OPN Browser
+
+This project aims to build a minimal web browser using AI-generated code.
+
+## Getting Started
+
+1. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the browser:
+   ```bash
+   python -m opn_browser.main
+   ```
+
+The browser uses PyQt5 and QtWebEngine to render web pages. When started, it loads
+`https://www.example.com` and provides an address bar where you can enter URLs.
