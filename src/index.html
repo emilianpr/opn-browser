@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPN Browser</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sidebar for workspaces and navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">OPN</div>
+      <button class="btn-icon" id="newWorkspace" title="New Workspace">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="workspaces" id="workspaceList">
+      <!-- Workspaces will be dynamically added here -->
+    </div>
+    
+    <div class="sidebar-footer">
+      <button class="btn-icon" id="settingsBtn" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="2"/>
+          <path d="M8 0v3M8 13v3M16 8h-3M3 8H0M13.5 2.5l-2 2M4.5 11.5l-2 2M13.5 13.5l-2-2M4.5 4.5l-2-2"/>
+        </svg>
+      </button>
+      <button class="btn-icon" id="themeBtn" title="Change Theme">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 2v12"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main browser area -->
+  <main class="main-content">
+    <!-- Top toolbar -->
+    <header class="toolbar">
+      <div class="tab-bar" id="tabBar">
+        <!-- Tabs will be dynamically added here -->
+      </div>
+      <button class="btn-icon new-tab-btn" id="newTabBtn" title="New Tab">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Navigation controls -->
+    <nav class="nav-controls">
+      <div class="nav-buttons">
+        <button class="btn-icon" id="backBtn" title="Back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M10 2L4 8l6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="btn-icon" id="forwardBtn" title="Forward">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M6 2l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="btn-icon" id="refreshBtn" title="Refresh">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M14 8A6 6 0 1 1 8 2" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M8 0v4l3-3-3-1z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="url-bar-container">
+        <input type="text" class="url-bar" id="urlBar" placeholder="Search or enter address...">
+      </div>
+      
+      <div class="view-controls">
+        <button class="btn-icon" id="splitViewBtn" title="Split View">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="1" y="2" width="6" height="12" stroke="currentColor" stroke-width="2" fill="none"/>
+            <rect x="9" y="2" width="6" height="12" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+        <button class="btn-icon" id="pipBtn" title="Picture-in-Picture">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="1" y="2" width="14" height="12" stroke="currentColor" stroke-width="2" fill="none"/>
+            <rect x="8" y="8" width="6" height="5" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Browser view area -->
+    <div class="browser-view" id="browserView">
+      <!-- Webviews will be dynamically added here -->
+      <div class="welcome-screen" id="welcomeScreen">
+        <h1>Welcome to OPN Browser</h1>
+        <p>A modern browser built for multitasking and workflow optimization</p>
+        <div class="quick-actions">
+          <button class="btn-primary" id="quickNewTab">Start Browsing</button>
+          <button class="btn-secondary" id="quickNewWorkspace">Create Workspace</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="btn-close" id="closeSettings">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3>Appearance</h3>
+          <div class="setting-item">
+            <label>Theme</label>
+            <select id="themeSelect">
+              <option value="monochrome">Monochrome</option>
+              <option value="blue">Ocean Blue</option>
+              <option value="purple">Purple Haze</option>
+              <option value="green">Forest Green</option>
+              <option value="orange">Sunset Orange</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="compactMode">
+              Compact Mode
+            </label>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Workflow</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="autoSaveSessions" checked>
+              Auto-save Sessions
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="groupSimilarTabs">
+              Auto-group Similar Tabs
+            </label>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <h3>Privacy</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="blockTrackers" checked>
+              Block Trackers
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Selector Modal -->
+  <div class="modal" id="themeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Choose Theme</h2>
+        <button class="btn-close" id="closeTheme">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="theme-grid">
+          <div class="theme-option" data-theme="monochrome">
+            <div class="theme-preview monochrome-preview"></div>
+            <span>Monochrome</span>
+          </div>
+          <div class="theme-option" data-theme="blue">
+            <div class="theme-preview blue-preview"></div>
+            <span>Ocean Blue</span>
+          </div>
+          <div class="theme-option" data-theme="purple">
+            <div class="theme-preview purple-preview"></div>
+            <span>Purple Haze</span>
+          </div>
+          <div class="theme-option" data-theme="green">
+            <div class="theme-preview green-preview"></div>
+            <span>Forest Green</span>
+          </div>
+          <div class="theme-option" data-theme="orange">
+            <div class="theme-preview orange-preview"></div>
+            <span>Sunset Orange</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
