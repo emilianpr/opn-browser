@@ -172,17 +172,33 @@ The browser uses Electron's Chromium engine, which provides:
 - Verify write permissions
 - Check browser console for errors
 
+## Implemented Features
+
+### Keyboard Shortcuts
+- Full keyboard navigation implemented
+- Chrome-compatible shortcuts (Cmd+T, Cmd+W, etc.)
+- Menu integration with accelerators
+- IPC communication for shortcuts
+- Tab switching and navigation shortcuts
+
+### Bookmark System
+- Add bookmarks with Cmd+D
+- Bookmarks bar for quick access
+- Toggle visibility with Cmd+Shift+B
+- Delete and manage bookmarks
+- Persistent storage with localStorage
+
 ## Future Enhancements
 
 ### Planned Features
-1. **Keyboard Shortcuts** - Full keyboard navigation
-2. **Bookmark System** - Save and organize favorite sites
-3. **Extensions** - Chrome extension compatibility
-4. **Tab Search** - Quickly find tabs across workspaces
-5. **Cloud Sync** - Sync sessions across devices
-6. **Advanced Privacy** - Built-in VPN, advanced tracker blocking
-7. **Tab Automation** - Auto-group similar tabs
-8. **Performance Monitoring** - Built-in resource usage dashboard
+1. **Extensions** - Chrome extension compatibility
+2. **Tab Search** - Quickly find tabs across workspaces
+3. **Cloud Sync** - Sync sessions across devices
+4. **Advanced Privacy** - Built-in VPN, advanced tracker blocking
+5. **Tab Automation** - Auto-group similar tabs
+6. **Performance Monitoring** - Built-in resource usage dashboard
+7. **Bookmark Folders** - Organize bookmarks in folders
+8. **Import/Export** - Import bookmarks from other browsers
 
 ### Code Improvements
 - Add TypeScript for better type safety

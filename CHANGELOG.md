@@ -55,12 +55,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Node integration disabled in renderer
 - Secure webview partition configuration
 
+## [1.1.0] - 2025-11-14
+
+### Added
+- **Comprehensive Keyboard Shortcuts** - Full Chrome-compatible keyboard navigation:
+  - `Cmd + T` - New tab
+  - `Cmd + W` - Close tab
+  - `Cmd + R` - Refresh page
+  - `Cmd + L` - Focus URL bar
+  - `Cmd + [` - Back
+  - `Cmd + ]` - Forward
+  - `Cmd + D` - Add bookmark
+  - `Cmd + Shift + B` - Toggle bookmarks bar
+  - `Cmd + Shift + T` - Reopen closed tab
+  - `Cmd + Shift + [` / `]` - Previous/Next tab
+  - `Cmd + 1-9` - Jump to tab by number
+  - `Cmd + F` - Find in page
+  - `Cmd + Shift + N` - New workspace
+- **Bookmark System**:
+  - Add bookmarks with keyboard shortcut (Cmd+D)
+  - Visual bookmarks bar below navigation
+  - Click bookmarks to navigate
+  - Delete bookmarks with hover button
+  - Toggle bookmarks bar visibility
+  - Persistent storage with localStorage
+  - Visual notification when bookmark added
+  - Prevents duplicate bookmarks
+- **Enhanced Menu System**:
+  - File menu with shortcuts
+  - History menu for navigation
+  - Bookmarks menu
+  - Improved menu organization
+- **Reopen Closed Tab**:
+  - Stores last 10 closed tabs
+  - Reopen with Cmd+Shift+T
+  - Restores URL and title
+- **Find in Page**:
+  - Search current page with Cmd+F
+  - Uses Electron's built-in find functionality
+
+### Changed
+- Updated main.js menu to include keyboard shortcuts
+- Enhanced IPC communication for menu shortcuts
+- Improved tab switching logic
+- Better keyboard event handling
+
+### Technical
+- Added keyboard event listeners in renderer
+- Implemented IPC channels for shortcuts
+- Enhanced BrowserState class with bookmark methods
+- Added closed tabs tracking
+- Improved preload script security
+
 ## [Unreleased]
 
 ### Planned Features
-- Advanced keyboard shortcuts
 - Tab search and filtering
-- Bookmark management system
 - Chrome extension compatibility
 - Advanced privacy controls
 - Cross-platform support (Windows, Linux)
@@ -69,16 +119,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Picture-in-Picture implementation
 - Performance monitoring dashboard
 - Custom theme creator
-- Import/export sessions
+- Import/export sessions and bookmarks
 - Tab suspension for memory optimization
 - Advanced history search
 - Developer tools integration
+- Bookmark folders and organization
 
 ### Known Issues
 - Picture-in-Picture UI is present but not yet functional
 - App icon needs to be converted to .icns for proper macOS integration
-- Keyboard shortcuts not yet implemented
-- No bookmark system in v1.0
+- Find in page uses basic prompt UI (can be enhanced with custom find bar)
 
 ---
 
