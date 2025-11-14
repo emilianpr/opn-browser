@@ -45,6 +45,48 @@ function createMenu() {
       ]
     },
     {
+      label: 'File',
+      submenu: [
+        {
+          label: 'New Tab',
+          accelerator: 'CmdOrCtrl+T',
+          click: () => {
+            mainWindow.webContents.send('shortcut-new-tab');
+          }
+        },
+        {
+          label: 'New Workspace',
+          accelerator: 'CmdOrCtrl+Shift+N',
+          click: () => {
+            mainWindow.webContents.send('shortcut-new-workspace');
+          }
+        },
+        {
+          label: 'Close Tab',
+          accelerator: 'CmdOrCtrl+W',
+          click: () => {
+            mainWindow.webContents.send('shortcut-close-tab');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Reopen Closed Tab',
+          accelerator: 'CmdOrCtrl+Shift+T',
+          click: () => {
+            mainWindow.webContents.send('shortcut-reopen-tab');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Find in Page',
+          accelerator: 'CmdOrCtrl+F',
+          click: () => {
+            mainWindow.webContents.send('shortcut-find');
+          }
+        }
+      ]
+    },
+    {
       label: 'Edit',
       submenu: [
         { role: 'undo' },
@@ -67,7 +109,68 @@ function createMenu() {
         { role: 'zoomIn' },
         { role: 'zoomOut' },
         { type: 'separator' },
+        {
+          label: 'Split View',
+          accelerator: 'CmdOrCtrl+D',
+          click: () => {
+            mainWindow.webContents.send('shortcut-split-view');
+          }
+        },
         { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'History',
+      submenu: [
+        {
+          label: 'Back',
+          accelerator: 'CmdOrCtrl+[',
+          click: () => {
+            mainWindow.webContents.send('shortcut-back');
+          }
+        },
+        {
+          label: 'Forward',
+          accelerator: 'CmdOrCtrl+]',
+          click: () => {
+            mainWindow.webContents.send('shortcut-forward');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Refresh',
+          accelerator: 'CmdOrCtrl+R',
+          click: () => {
+            mainWindow.webContents.send('shortcut-refresh');
+          }
+        }
+      ]
+    },
+    {
+      label: 'Bookmarks',
+      submenu: [
+        {
+          label: 'Add Bookmark',
+          accelerator: 'CmdOrCtrl+D',
+          click: () => {
+            mainWindow.webContents.send('shortcut-add-bookmark');
+          }
+        },
+        {
+          label: 'Show All Bookmarks',
+          accelerator: 'CmdOrCtrl+Shift+B',
+          click: () => {
+            mainWindow.webContents.send('shortcut-show-bookmarks');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Toggle Bookmarks Bar',
+          accelerator: 'CmdOrCtrl+Shift+B',
+          click: () => {
+            mainWindow.webContents.send('shortcut-toggle-bookmarks-bar');
+          }
+        }
       ]
     },
     {

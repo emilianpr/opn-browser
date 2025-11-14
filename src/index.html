@@ -93,6 +93,13 @@
       </div>
     </nav>
 
+    <!-- Bookmarks Bar -->
+    <div class="bookmarks-bar" id="bookmarksBar">
+      <div class="bookmarks-list" id="bookmarksList">
+        <!-- Bookmarks will be dynamically added here -->
+      </div>
+    </div>
+
     <!-- Browser view area -->
     <div class="browser-view" id="browserView">
       <!-- Webviews will be dynamically added here -->
@@ -193,6 +200,21 @@
             <div class="theme-preview orange-preview"></div>
             <span>Sunset Orange</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookmarks Modal -->
+  <div class="modal" id="bookmarksModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Bookmarks</h2>
+        <button class="btn-close" id="closeBookmarks">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="bookmarks-manager" id="bookmarksManager">
+          <!-- Bookmarks will be displayed here -->
         </div>
       </div>
     </div>
