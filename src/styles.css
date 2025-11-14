@@ -645,3 +645,120 @@ webview {
     transform: translateX(100%);
   }
 }
+
+/* Bookmarks Bar */
+.bookmarks-bar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  min-height: 40px;
+  transition: var(--transition);
+}
+
+.bookmarks-bar.hidden {
+  display: none;
+}
+
+.bookmarks-list {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  max-width: 200px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.bookmark-item:hover {
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+.bookmark-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bookmark-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: var(--transition);
+  opacity: 0;
+}
+
+.bookmark-item:hover .bookmark-delete {
+  opacity: 1;
+}
+
+.bookmark-delete:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* Bookmarks Manager in Modal */
+.bookmarks-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.bookmarks-manager .bookmark-item {
+  max-width: 100%;
+  justify-content: space-between;
+}
+
+.bookmarks-manager .bookmark-delete {
+  opacity: 1;
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
+  font-size: 14px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10000;
+  border: 1px solid var(--border-color);
+}
+
+.notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}

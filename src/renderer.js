@@ -8,6 +8,8 @@ class BrowserState {
     this.splitViewEnabled = false;
     this.splitTabs = [];
     this.settings = this.loadSettings();
+    this.bookmarks = this.loadBookmarks();
+    this.closedTabs = [];
     this.init();
   }
 
@@ -33,11 +35,21 @@ class BrowserState {
       compactMode: false,
       autoSaveSessions: true,
       groupSimilarTabs: false,
-      blockTrackers: true
+      blockTrackers: true,
+      showBookmarksBar: true
     };
     
     const saved = localStorage.getItem('settings');
     return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
+  }
+
+  loadBookmarks() {
+    const saved = localStorage.getItem('bookmarks');
+    return saved ? JSON.parse(saved) : [];
+  }
+
+  saveBookmarks() {
+    localStorage.setItem('bookmarks', JSON.stringify(this.bookmarks));
   }
 
   saveSettings() {
@@ -92,6 +104,17 @@ class BrowserState {
     const tab = this.tabs.get(tabId);
     if (!tab) return;
 
+    // Save to closed tabs for reopen functionality
+    this.closedTabs.push({
+      url: tab.url,
+      title: tab.title,
+      timestamp: Date.now()
+    });
+    // Keep only last 10 closed tabs
+    if (this.closedTabs.length > 10) {
+      this.closedTabs.shift();
+    }
+
     const workspace = this.workspaces.find(w => w.id === tab.workspaceId);
     if (workspace) {
       workspace.tabs = workspace.tabs.filter(id => id !== tabId);
@@ -112,6 +135,10 @@ class BrowserState {
     this.saveState();
   }
 
+  getLastClosedTab() {
+    return this.closedTabs.pop();
+  }
+
   getRandomColor() {
     const colors = ['#4a9eff', '#a84aff', '#4aff88', '#ff884a', '#ff4a8a'];
     return colors[Math.floor(Math.random() * colors.length)];
@@ -121,6 +148,34 @@ class BrowserState {
     document.documentElement.setAttribute('data-theme', themeName);
     this.settings.theme = themeName;
     this.saveSettings();
+  }
+
+  addBookmark(url, title) {
+    // Check if bookmark already exists
+    const exists = this.bookmarks.find(b => b.url === url);
+    if (exists) {
+      return false;
+    }
+
+    const bookmark = {
+      id: Date.now().toString() + Math.random(),
+      url: url,
+      title: title || url,
+      createdAt: Date.now()
+    };
+    
+    this.bookmarks.push(bookmark);
+    this.saveBookmarks();
+    return true;
+  }
+
+  removeBookmark(bookmarkId) {
+    this.bookmarks = this.bookmarks.filter(b => b.id !== bookmarkId);
+    this.saveBookmarks();
+  }
+
+  getBookmarks() {
+    return this.bookmarks;
   }
 }
 
@@ -165,6 +220,9 @@ class UIManager {
     this.themeBtn = document.getElementById('themeBtn');
     this.closeTheme = document.getElementById('closeTheme');
     
+    this.bookmarksModal = document.getElementById('bookmarksModal');
+    this.closeBookmarks = document.getElementById('closeBookmarks');
+    
     // Quick action buttons
     this.quickNewTab = document.getElementById('quickNewTab');
     this.quickNewWorkspace = document.getElementById('quickNewWorkspace');
@@ -196,11 +254,16 @@ class UIManager {
     this.closeTheme.addEventListener('click', () => this.hideModal(this.themeModal));
     
     // Close modals on background click
-    [this.settingsModal, this.themeModal].forEach(modal => {
+    [this.settingsModal, this.themeModal, this.bookmarksModal].forEach(modal => {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) this.hideModal(modal);
       });
     });
+    
+    // Bookmarks modal close button
+    if (this.closeBookmarks) {
+      this.closeBookmarks.addEventListener('click', () => this.hideModal(this.bookmarksModal));
+    }
     
     // Settings events
     document.getElementById('themeSelect').addEventListener('change', (e) => {
@@ -239,6 +302,12 @@ class UIManager {
     // Quick actions
     this.quickNewTab.addEventListener('click', () => this.handleNewTab());
     this.quickNewWorkspace.addEventListener('click', () => this.handleNewWorkspace());
+    
+    // Keyboard shortcuts
+    this.setupKeyboardShortcuts();
+    
+    // IPC shortcuts from menu
+    this.setupIPCShortcuts();
   }
 
   render() {
@@ -246,6 +315,8 @@ class UIManager {
     this.renderTabs();
     this.updateWelcomeScreen();
     this.syncSettings();
+    this.renderBookmarks();
+    this.updateBookmarksBarVisibility();
   }
 
   renderWorkspaces() {
@@ -526,6 +597,283 @@ class UIManager {
     document.getElementById('autoSaveSessions').checked = this.state.settings.autoSaveSessions;
     document.getElementById('groupSimilarTabs').checked = this.state.settings.groupSimilarTabs;
     document.getElementById('blockTrackers').checked = this.state.settings.blockTrackers;
+  }
+
+  setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const cmdOrCtrl = isMac ? e.metaKey : e.ctrlKey;
+      
+      // Don't trigger shortcuts when typing in inputs
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        // Allow Cmd+L to focus URL bar even when in input
+        if (cmdOrCtrl && e.key === 'l') {
+          e.preventDefault();
+          this.urlBar.focus();
+          this.urlBar.select();
+          return;
+        }
+        return;
+      }
+      
+      // Cmd/Ctrl + T: New Tab
+      if (cmdOrCtrl && e.key === 't') {
+        e.preventDefault();
+        this.handleNewTab();
+      }
+      
+      // Cmd/Ctrl + W: Close Tab
+      else if (cmdOrCtrl && e.key === 'w') {
+        e.preventDefault();
+        if (this.state.currentTabId) {
+          this.handleCloseTab(this.state.currentTabId);
+        }
+      }
+      
+      // Cmd/Ctrl + R: Refresh
+      else if (cmdOrCtrl && e.key === 'r') {
+        e.preventDefault();
+        this.handleRefresh();
+      }
+      
+      // Cmd/Ctrl + L: Focus URL bar
+      else if (cmdOrCtrl && e.key === 'l') {
+        e.preventDefault();
+        this.urlBar.focus();
+        this.urlBar.select();
+      }
+      
+      // Cmd/Ctrl + [: Back
+      else if (cmdOrCtrl && e.key === '[') {
+        e.preventDefault();
+        this.handleBack();
+      }
+      
+      // Cmd/Ctrl + ]: Forward
+      else if (cmdOrCtrl && e.key === ']') {
+        e.preventDefault();
+        this.handleForward();
+      }
+      
+      // Cmd/Ctrl + D: Add Bookmark (or Split View - we'll prioritize bookmark)
+      else if (cmdOrCtrl && !e.shiftKey && e.key === 'd') {
+        e.preventDefault();
+        this.handleAddBookmark();
+      }
+      
+      // Cmd/Ctrl + Shift + N: New Workspace
+      else if (cmdOrCtrl && e.shiftKey && e.key === 'N') {
+        e.preventDefault();
+        this.handleNewWorkspace();
+      }
+      
+      // Cmd/Ctrl + Shift + B: Toggle Bookmarks Bar
+      else if (cmdOrCtrl && e.shiftKey && e.key === 'B') {
+        e.preventDefault();
+        this.toggleBookmarksBar();
+      }
+      
+      // Cmd/Ctrl + Shift + T: Reopen Closed Tab
+      else if (cmdOrCtrl && e.shiftKey && e.key === 'T') {
+        e.preventDefault();
+        this.handleReopenTab();
+      }
+      
+      // Cmd/Ctrl + Shift + ]: Next Tab
+      else if (cmdOrCtrl && e.shiftKey && e.key === '}') {
+        e.preventDefault();
+        this.switchToNextTab();
+      }
+      
+      // Cmd/Ctrl + Shift + [: Previous Tab
+      else if (cmdOrCtrl && e.shiftKey && e.key === '{') {
+        e.preventDefault();
+        this.switchToPreviousTab();
+      }
+      
+      // Cmd/Ctrl + 1-9: Switch to tab by number
+      else if (cmdOrCtrl && e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        this.switchToTabByIndex(parseInt(e.key) - 1);
+      }
+      
+      // Cmd/Ctrl + F: Find in page
+      else if (cmdOrCtrl && e.key === 'f') {
+        e.preventDefault();
+        this.handleFindInPage();
+      }
+    });
+  }
+
+  setupIPCShortcuts() {
+    if (window.electronAPI && window.electronAPI.onShortcut) {
+      window.electronAPI.onShortcut('shortcut-new-tab', () => this.handleNewTab());
+      window.electronAPI.onShortcut('shortcut-new-workspace', () => this.handleNewWorkspace());
+      window.electronAPI.onShortcut('shortcut-close-tab', () => {
+        if (this.state.currentTabId) {
+          this.handleCloseTab(this.state.currentTabId);
+        }
+      });
+      window.electronAPI.onShortcut('shortcut-reopen-tab', () => this.handleReopenTab());
+      window.electronAPI.onShortcut('shortcut-find', () => this.handleFindInPage());
+      window.electronAPI.onShortcut('shortcut-split-view', () => this.handleSplitView());
+      window.electronAPI.onShortcut('shortcut-back', () => this.handleBack());
+      window.electronAPI.onShortcut('shortcut-forward', () => this.handleForward());
+      window.electronAPI.onShortcut('shortcut-refresh', () => this.handleRefresh());
+      window.electronAPI.onShortcut('shortcut-add-bookmark', () => this.handleAddBookmark());
+      window.electronAPI.onShortcut('shortcut-show-bookmarks', () => this.showBookmarksModal());
+      window.electronAPI.onShortcut('shortcut-toggle-bookmarks-bar', () => this.toggleBookmarksBar());
+    }
+  }
+
+  switchToNextTab() {
+    const workspace = this.state.getCurrentWorkspace();
+    if (!workspace || workspace.tabs.length === 0) return;
+    
+    const currentIndex = workspace.tabs.indexOf(this.state.currentTabId);
+    const nextIndex = (currentIndex + 1) % workspace.tabs.length;
+    this.state.currentTabId = workspace.tabs[nextIndex];
+    this.render();
+    this.updateWebview();
+  }
+
+  switchToPreviousTab() {
+    const workspace = this.state.getCurrentWorkspace();
+    if (!workspace || workspace.tabs.length === 0) return;
+    
+    const currentIndex = workspace.tabs.indexOf(this.state.currentTabId);
+    const prevIndex = currentIndex <= 0 ? workspace.tabs.length - 1 : currentIndex - 1;
+    this.state.currentTabId = workspace.tabs[prevIndex];
+    this.render();
+    this.updateWebview();
+  }
+
+  switchToTabByIndex(index) {
+    const workspace = this.state.getCurrentWorkspace();
+    if (!workspace || workspace.tabs.length === 0) return;
+    
+    if (index < workspace.tabs.length) {
+      this.state.currentTabId = workspace.tabs[index];
+      this.render();
+      this.updateWebview();
+    }
+  }
+
+  handleReopenTab() {
+    // Implement reopen last closed tab
+    const lastClosedTab = this.state.getLastClosedTab();
+    if (lastClosedTab) {
+      const tab = this.state.createTab(lastClosedTab.url);
+      if (tab) {
+        tab.title = lastClosedTab.title;
+        this.render();
+        this.createWebview(tab);
+      }
+    }
+  }
+
+  handleFindInPage() {
+    const webview = this.getActiveWebview();
+    if (webview) {
+      // Electron webview has built-in find functionality
+      // For now, show an alert - can be enhanced with a find bar UI
+      const searchTerm = prompt('Find in page:');
+      if (searchTerm) {
+        webview.findInPage(searchTerm);
+      }
+    }
+  }
+
+  handleAddBookmark() {
+    const currentTab = this.state.tabs.get(this.state.currentTabId);
+    if (currentTab) {
+      this.state.addBookmark(currentTab.url, currentTab.title);
+      this.renderBookmarks();
+      // Show a brief notification
+      this.showNotification('Bookmark added');
+    }
+  }
+
+  showBookmarksModal() {
+    this.showModal(document.getElementById('bookmarksModal'));
+  }
+
+  toggleBookmarksBar() {
+    const bookmarksBar = document.getElementById('bookmarksBar');
+    if (bookmarksBar) {
+      bookmarksBar.classList.toggle('hidden');
+      this.state.settings.showBookmarksBar = !bookmarksBar.classList.contains('hidden');
+      this.state.saveSettings();
+    }
+  }
+
+  showNotification(message) {
+    // Simple notification system
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.classList.add('show'), 10);
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 2000);
+  }
+
+  renderBookmarks() {
+    const bookmarksBar = document.getElementById('bookmarksList');
+    if (!bookmarksBar) return;
+    
+    bookmarksBar.innerHTML = '';
+    const bookmarks = this.state.getBookmarks();
+    
+    bookmarks.forEach(bookmark => {
+      const bookmarkElement = document.createElement('div');
+      bookmarkElement.className = 'bookmark-item';
+      bookmarkElement.title = bookmark.url;
+      
+      const title = document.createElement('span');
+      title.textContent = bookmark.title || bookmark.url;
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'bookmark-delete';
+      deleteBtn.innerHTML = '×';
+      deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.state.removeBookmark(bookmark.id);
+        this.renderBookmarks();
+      });
+      
+      bookmarkElement.addEventListener('click', () => {
+        const currentTab = this.state.tabs.get(this.state.currentTabId);
+        if (currentTab) {
+          currentTab.url = bookmark.url;
+          this.state.saveState();
+        }
+        
+        const webview = this.getActiveWebview();
+        if (webview) {
+          webview.src = bookmark.url;
+        } else if (currentTab) {
+          this.createWebview(currentTab, bookmark.url);
+        }
+      });
+      
+      bookmarkElement.appendChild(title);
+      bookmarkElement.appendChild(deleteBtn);
+      bookmarksBar.appendChild(bookmarkElement);
+    });
+  }
+
+  updateBookmarksBarVisibility() {
+    const bookmarksBar = document.getElementById('bookmarksBar');
+    if (bookmarksBar) {
+      if (this.state.settings.showBookmarksBar) {
+        bookmarksBar.classList.remove('hidden');
+      } else {
+        bookmarksBar.classList.add('hidden');
+      }
+    }
   }
 }
 

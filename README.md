@@ -22,6 +22,12 @@ A modern, customizable Chromium-based browser built for multitasking and workflo
 - **Tracker Blocking** - Enhanced privacy protection
 - **macOS Optimized** - Native macOS integration
 
+### 📚 Bookmarks & Organization
+- **Bookmarks Bar** - Quick access to favorite sites
+- **Bookmark Management** - Add, remove, and organize bookmarks
+- **Keyboard Shortcuts** - Cmd+D to bookmark current page
+- **Toggle Bar Visibility** - Show/hide bookmarks bar with Cmd+Shift+B
+
 ## 🛠️ Installation
 
 ### Prerequisites
@@ -74,10 +80,20 @@ The app will be available in the `dist` folder as a `.dmg` installer.
 - Themes persist across sessions
 
 ### Keyboard Shortcuts
-- `Cmd + T` - New tab (coming soon)
-- `Cmd + W` - Close tab (coming soon)
-- `Cmd + R` - Refresh page (coming soon)
-- `Cmd + L` - Focus URL bar (coming soon)
+- `Cmd + T` - New tab
+- `Cmd + W` - Close tab
+- `Cmd + R` - Refresh page
+- `Cmd + L` - Focus URL bar
+- `Cmd + [` - Back
+- `Cmd + ]` - Forward
+- `Cmd + D` - Add bookmark
+- `Cmd + Shift + B` - Toggle bookmarks bar
+- `Cmd + Shift + T` - Reopen closed tab
+- `Cmd + Shift + [` - Previous tab
+- `Cmd + Shift + ]` - Next tab
+- `Cmd + 1-9` - Jump to tab by number
+- `Cmd + F` - Find in page
+- `Cmd + Shift + N` - New workspace
 
 ## 🏗️ Technology Stack
 
@@ -111,14 +127,16 @@ MIT License - feel free to use and modify as needed.
 
 ## 🎯 Roadmap
 
-- [ ] Advanced keyboard shortcuts
+- [x] Advanced keyboard shortcuts
+- [x] Bookmark management
 - [ ] Tab search and filtering
-- [ ] Bookmark management
 - [ ] Extension support
 - [ ] Advanced privacy controls
 - [ ] Cross-platform support (Windows, Linux)
 - [ ] Cloud sync for sessions
 - [ ] Advanced tab grouping with automation
+- [ ] Bookmark folders and organization
+- [ ] Import/export bookmarks
 
 ---
 

@@ -135,7 +135,7 @@
 └────────────────────────────────────┘
 ```
 
-## Keyboard Interactions (Planned)
+## Keyboard Shortcuts (Implemented)
 
 ### Navigation
 - `Cmd + L` - Focus URL bar
@@ -149,14 +149,18 @@
 - `Cmd + Shift + ]` - Next tab
 - `Cmd + Shift + [` - Previous tab
 - `Cmd + 1-9` - Jump to tab
+- `Cmd + Shift + T` - Reopen closed tab
+
+### Bookmarks
+- `Cmd + D` - Add bookmark
+- `Cmd + Shift + B` - Toggle bookmarks bar
 
 ### Workspaces
 - `Cmd + Shift + N` - New workspace
-- `Cmd + Shift + 1-9` - Jump to workspace
 
-### View
-- `Cmd + D` - Toggle split view
-- `Cmd + Shift + F` - Full screen
+### Other
+- `Cmd + F` - Find in page
+- `Cmd + Shift + F` - Full screen (system shortcut)
 
 ## Workflow Examples
 
@@ -216,6 +220,32 @@
 - **Accent**: Warm orange (#ff884a)
 - **Style**: Warm, energetic
 - **Best for**: Creative projects
+
+## Bookmarks System
+
+### Bookmarks Bar
+- Quick access bar below navigation
+- Shows all saved bookmarks
+- Click to navigate instantly
+- Hover to see full URL
+
+### Adding Bookmarks
+- Use `Cmd + D` shortcut
+- Saves current page URL and title
+- Visual notification on save
+- No duplicates allowed
+
+### Managing Bookmarks
+- Click bookmark to open
+- Delete button appears on hover
+- Bookmarks persist across sessions
+- Stored in localStorage
+
+### Toggle Visibility
+- Use `Cmd + Shift + B` to toggle
+- Show/hide bookmarks bar
+- Preference saved
+- More screen space when hidden
 
 ## Privacy Features
 
