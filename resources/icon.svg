@@ -1,0 +1,24 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#0a0a0a" rx="120"/>
+  
+  <!-- Outer circle -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#ffffff" stroke-width="24"/>
+  
+  <!-- Inner design - stylized "O" for OPN -->
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#ffffff" stroke-width="32"/>
+  
+  <!-- Accent dots representing multitasking/workspaces -->
+  <circle cx="256" cy="116" r="16" fill="#ffffff"/>
+  <circle cx="356" cy="176" r="16" fill="#ffffff"/>
+  <circle cx="356" cy="336" r="16" fill="#ffffff"/>
+  <circle cx="256" cy="396" r="16" fill="#ffffff"/>
+  <circle cx="156" cy="336" r="16" fill="#ffffff"/>
+  <circle cx="156" cy="176" r="16" fill="#ffffff"/>
+  
+  <!-- Center highlight -->
+  <circle cx="256" cy="256" r="24" fill="#ffffff"/>
+  
+  <!-- Split view indicator lines -->
+  <line x1="256" y1="196" x2="256" y2="316" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+</svg>
